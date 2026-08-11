@@ -6,6 +6,7 @@ import type { wgInterface } from './schema';
 
 import {
   EnabledSchema,
+  HeaderProtectionKeySchema,
   HSchema,
   ISchema,
   JcSchema,
@@ -13,7 +14,9 @@ import {
   JminSchema,
   MtuSchema,
   PortSchema,
+  RangeSchema,
   RoutingTableSchema,
+  S_MIN_HEADER_PROTECTION,
   SSchema,
   safeStringRefine,
   schemaForType,
@@ -65,12 +68,43 @@ export const InterfaceUpdateSchema = schemaForType<InterfaceUpdateType>()(
     i3: ISchema,
     i4: ISchema,
     i5: ISchema,
+    headerProtectionKey: HeaderProtectionKeySchema,
+    contentPaddingAddition: RangeSchema,
+    rekeyAfterTime: RangeSchema,
+    rekeyTimeout: RangeSchema,
+    rejectAfterTime: RangeSchema,
+    keepaliveTimeout: RangeSchema,
+    maxHandshakeAttempts: RangeSchema,
     port: PortSchema,
     device: device,
     enabled: EnabledSchema,
     firewallEnabled: EnabledSchema,
   })
-);
+).superRefine((data, ctx) => {
+  if (!data.headerProtectionKey) {
+    return;
+  }
+
+  // With header protection enabled the first 12 bytes of the junk are used as
+  // the ChaCha20 nonce, so every junk size has to provide at least that many
+  // bytes. AmneziaWG rejects the interface with EINVAL otherwise, which
+  // surfaces as an unhelpful "Unable to modify interface: Invalid argument".
+  for (const field of ['s1', 's2', 's3', 's4'] as const) {
+    const value = data[field];
+
+    if (
+      value === null ||
+      value === undefined ||
+      value < S_MIN_HEADER_PROTECTION
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: [field],
+        message: t('zod.interface.sHeaderProtection'),
+      });
+    }
+  }
+});
 
 export type InterfaceCidrUpdateType = {
   ipv4Cidr: string;

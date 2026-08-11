@@ -86,6 +86,72 @@ export const ISchema = z
   .pipe(controlStringRefine)
   .nullable();
 
+/**
+ * AmneziaWG 3.0
+ *
+ * With header protection enabled the first 12 bytes of every junk are used as
+ * the ChaCha20 nonce, so S1-S4 have to be at least that large.
+ */
+export const S_MIN_HEADER_PROTECTION = 12;
+
+/**
+ * AmneziaWG 3.0
+ *
+ * HeaderProtectionKey is a 32 byte key, encoded as base64 (44 chars, padded).
+ * It encrypts the packet header with ChaCha20 and must be identical on both
+ * peers, otherwise handshakes are never completed.
+ */
+export const HeaderProtectionKeySchema = z
+  .string()
+  .transform((v) => v.trim())
+  .refine(
+    (v) => {
+      if (!/^[A-Za-z0-9+/]{43}=$/.test(v)) return false;
+
+      return Buffer.from(v, 'base64').length === 32;
+    },
+    { message: t('zod.generic.validBase64Key') }
+  )
+  .nullable();
+
+/**
+ * AmneziaWG 3.0
+ *
+ * Randomized timings and content padding are given either as a single value
+ * (`N`) or as an inclusive range (`N-M`). Both bounds must fit into 16 bits:
+ * larger values are silently truncated by the AmneziaWG implementation, which
+ * would result in timings that differ from what the user configured.
+ */
+const RANGE_MAX = 65535;
+
+export const RangeSchema = z
+  .string()
+  .transform((v) => v.replace(/\s+/g, ''))
+  .refine(
+    (v) => {
+      if (!v) return false;
+
+      if (!/^\d+(-\d+)?$/.test(v)) return false;
+
+      if (!v.includes('-')) {
+        return Number(v) <= RANGE_MAX;
+      }
+
+      const [min, max] = v.split('-').map(Number);
+      return (
+        min !== undefined && max !== undefined && max <= RANGE_MAX && min <= max
+      );
+    },
+    { message: t('zod.generic.validNumberRange') }
+  )
+  .transform((v) => {
+    if (!v.includes('-')) return `${Number(v)}`;
+
+    const [min, max] = v.split('-').map(Number);
+    return min === max ? `${min}` : `${min}-${max}`;
+  })
+  .nullable();
+
 export const PortSchema = z
   .number({ message: t('zod.port') })
   .min(1, { message: t('zod.port') })

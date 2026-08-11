@@ -209,7 +209,8 @@
       "stringMin": "{0} must be at least {1} Character",
       "stringMax": "{0} must be at most {1} Character",
       "numberMin": "{0} must be at least {1}",
-      "numberMax": "{0} must be at most {1}"
+      "numberMax": "{0} must be at most {1}",
+      "validBase64Key": "{0} must be a valid 32 byte base64 key"
     },
     "client": {
       "id": "Client ID",
@@ -245,7 +246,8 @@
       "cidr": "CIDR",
       "device": "Device",
       "cidrValid": "CIDR must be valid",
-      "routingTable": "Routing table must be auto, off, or a table number"
+      "routingTable": "Routing table must be auto, off, or a table number",
+      "sHeaderProtection": "S1-S4 must be at least 12 when header protection is enabled"
     },
     "otl": "One Time link",
     "stringMalformed": "String is malformed",
@@ -306,6 +308,23 @@
     "i5Label": "Special junk packet 5 (I5)",
     "i5Description": "Protocol mimic packet in hex format: <b 0x...>",
     "mtuNote": "Values depend on the MTU",
-    "obfuscationParameters": "AmneziaWG Obfuscation Parameters"
+    "obfuscationParameters": "AmneziaWG Obfuscation Parameters",
+    "v3Parameters": "AmneziaWG 3.0 parameters",
+    "v3Note": "Header protection must be identical on both peers. It requires S1-S4 to be at least 12, because the first 12 bytes of each junk are used as the ChaCha20 nonce. The remaining parameters only affect this peer. Leave the key empty to keep using AmneziaWG 2.0.",
+    "headerProtectionKeyLabel": "Header protection key",
+    "headerProtectionKeyDescription": "32 byte key (base64) used to encrypt the packet header. Must match on both peers, otherwise handshakes never complete.",
+    "generateHeaderProtectionKey": "Generate key",
+    "contentPaddingAdditionLabel": "Content padding addition",
+    "contentPaddingAdditionDescription": "Extra padding added inside the encrypted payload. Single value or range, e.g. 0-8",
+    "rekeyAfterTimeLabel": "Rekey after time",
+    "rekeyAfterTimeDescription": "Seconds before a rekey is started. Single value or range, e.g. 110-130",
+    "rekeyTimeoutLabel": "Rekey timeout",
+    "rekeyTimeoutDescription": "Seconds before a handshake is retried. Single value or range",
+    "rejectAfterTimeLabel": "Reject after time",
+    "rejectAfterTimeDescription": "Seconds before a session is rejected. Single value or range",
+    "keepaliveTimeoutLabel": "Keepalive timeout",
+    "keepaliveTimeoutDescription": "Seconds before a keepalive is sent. Single value or range",
+    "maxHandshakeAttemptsLabel": "Max handshake attempts",
+    "maxHandshakeAttemptsDescription": "Number of handshake attempts before giving up. Single value or range"
   }
 }

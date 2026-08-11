@@ -130,6 +130,58 @@
           :description="$t('awg.i5Description')"
         />
       </FormGroup>
+      <FormGroup v-if="globalStore.information?.isAwg">
+        <FormHeading>{{ $t('awg.v3Parameters') }}</FormHeading>
+
+        <div class="col-span-full text-sm">{{ $t('awg.v3Note') }}</div>
+
+        <FormNullTextField
+          id="headerProtectionKey"
+          v-model="data.headerProtectionKey"
+          :label="$t('awg.headerProtectionKeyLabel')"
+          :description="$t('awg.headerProtectionKeyDescription')"
+        />
+        <FormSecondaryActionField
+          :label="$t('awg.generateHeaderProtectionKey')"
+          @click="generateHeaderProtectionKey"
+        />
+        <FormNullTextField
+          id="contentPaddingAddition"
+          v-model="data.contentPaddingAddition"
+          :label="$t('awg.contentPaddingAdditionLabel')"
+          :description="$t('awg.contentPaddingAdditionDescription')"
+        />
+        <FormNullTextField
+          id="rekeyAfterTime"
+          v-model="data.rekeyAfterTime"
+          :label="$t('awg.rekeyAfterTimeLabel')"
+          :description="$t('awg.rekeyAfterTimeDescription')"
+        />
+        <FormNullTextField
+          id="rekeyTimeout"
+          v-model="data.rekeyTimeout"
+          :label="$t('awg.rekeyTimeoutLabel')"
+          :description="$t('awg.rekeyTimeoutDescription')"
+        />
+        <FormNullTextField
+          id="rejectAfterTime"
+          v-model="data.rejectAfterTime"
+          :label="$t('awg.rejectAfterTimeLabel')"
+          :description="$t('awg.rejectAfterTimeDescription')"
+        />
+        <FormNullTextField
+          id="keepaliveTimeout"
+          v-model="data.keepaliveTimeout"
+          :label="$t('awg.keepaliveTimeoutLabel')"
+          :description="$t('awg.keepaliveTimeoutDescription')"
+        />
+        <FormNullTextField
+          id="maxHandshakeAttempts"
+          v-model="data.maxHandshakeAttempts"
+          :label="$t('awg.maxHandshakeAttemptsLabel')"
+          :description="$t('awg.maxHandshakeAttemptsDescription')"
+        />
+      </FormGroup>
       <FormGroup>
         <FormHeading>{{ $t('admin.interface.firewall') }}</FormHeading>
         <FormSwitchField
@@ -237,5 +289,16 @@ const _restartInterface = useSubmit(
 
 async function restartInterface() {
   await _restartInterface(undefined);
+}
+
+/**
+ * AmneziaWG 3.0 header protection uses a 32 byte key shared by both peers.
+ * It carries no asymmetric material, so generating it in the browser is
+ * sufficient and saves a round trip to the server.
+ */
+function generateHeaderProtectionKey() {
+  const key = new Uint8Array(32);
+  crypto.getRandomValues(key);
+  data.value.headerProtectionKey = btoa(String.fromCharCode(...key));
 }
 </script>

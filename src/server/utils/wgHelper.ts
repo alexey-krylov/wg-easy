@@ -78,6 +78,14 @@ AllowedIPs = ${allowedIps.join(', ')}${extraLines.length ? `\n${extraLines.join(
         I3: wgInterface.i3,
         I4: wgInterface.i4,
         I5: wgInterface.i5,
+        // AmneziaWG 3.0
+        HeaderProtectionKey: wgInterface.headerProtectionKey,
+        ContentPaddingAddition: wgInterface.contentPaddingAddition,
+        RekeyAfterTime: wgInterface.rekeyAfterTime,
+        RekeyTimeout: wgInterface.rekeyTimeout,
+        RejectAfterTime: wgInterface.rejectAfterTime,
+        KeepaliveTimeout: wgInterface.keepaliveTimeout,
+        MaxHandshakeAttempts: wgInterface.maxHandshakeAttempts,
       } as const;
 
       awgLines = Object.entries(parameters)
@@ -147,6 +155,15 @@ PostDown = ${iptablesTemplate(hooks.postDown, wgInterface)}`;
         I3: client.i3,
         I4: client.i4,
         I5: client.i5,
+        // AmneziaWG 3.0: the header protection key has to be identical on both
+        // peers, the remaining parameters only affect the client itself.
+        HeaderProtectionKey: wgInterface.headerProtectionKey,
+        ContentPaddingAddition: wgInterface.contentPaddingAddition,
+        RekeyAfterTime: wgInterface.rekeyAfterTime,
+        RekeyTimeout: wgInterface.rekeyTimeout,
+        RejectAfterTime: wgInterface.rejectAfterTime,
+        KeepaliveTimeout: wgInterface.keepaliveTimeout,
+        MaxHandshakeAttempts: wgInterface.maxHandshakeAttempts,
       } as const;
 
       awgLines = Object.entries(parameters)

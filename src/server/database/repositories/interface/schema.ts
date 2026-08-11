@@ -31,6 +31,16 @@ export const wgInterface = sqliteTable('interfaces_table', {
   i3: text(),
   i4: text(),
   i5: text(),
+  // AmneziaWG 3.0: header protection, must match on both peers
+  headerProtectionKey: text('header_protection_key'),
+  // AmneziaWG 3.0: single value or inclusive range, e.g. "0-8"
+  contentPaddingAddition: text('content_padding_addition'),
+  // AmneziaWG 3.0: randomized timings, client side only
+  rekeyAfterTime: text('rekey_after_time'),
+  rekeyTimeout: text('rekey_timeout'),
+  rejectAfterTime: text('reject_after_time'),
+  keepaliveTimeout: text('keepalive_timeout'),
+  maxHandshakeAttempts: text('max_handshake_attempts'),
   // does nothing yet
   enabled: int({ mode: 'boolean' }).notNull(),
   // Enable per-client firewall filtering via iptables

@@ -207,7 +207,8 @@
       "stringMin": "{0} должно содержать не менее {1} символа",
       "numberMin": "{0} должно быть не менее {1}",
       "stringMax": "{0} должно содержать не более {1} символов",
-      "numberMax": "{0} должно быть не более {1}"
+      "numberMax": "{0} должно быть не более {1}",
+      "validBase64Key": "{0} должен быть корректным 32-байтным ключом в base64"
     },
     "client": {
       "id": "ID клиента",
@@ -242,7 +243,8 @@
     "interface": {
       "cidr": "CIDR",
       "device": "Устройство",
-      "cidrValid": "CIDR должен быть корректным"
+      "cidrValid": "CIDR должен быть корректным",
+      "sHeaderProtection": "S1-S4 должны быть не меньше 12 при включённой защите заголовков"
     },
     "otl": "Одноразовая ссылка",
     "stringMalformed": "Строка имеет неверный формат",
@@ -303,6 +305,23 @@
     "i5Label": "Специальный мусорный пакет 5 (I5)",
     "i5Description": "Пакет имитации протокола в hex формате: <b 0x...>",
     "mtuNote": "Значения зависят от MTU",
-    "obfuscationParameters": "Параметры обфускации AmneziaWG"
+    "obfuscationParameters": "Параметры обфускации AmneziaWG",
+    "v3Parameters": "Параметры AmneziaWG 3.0",
+    "v3Note": "Защита заголовков должна совпадать на обеих сторонах. Она требует S1-S4 не меньше 12, так как первые 12 байт каждой добивки используются как nonce ChaCha20. Остальные параметры влияют только на эту сторону. Оставьте ключ пустым, чтобы продолжить работу на AmneziaWG 2.0.",
+    "headerProtectionKeyLabel": "Ключ защиты заголовков",
+    "headerProtectionKeyDescription": "32-байтный ключ (base64) для шифрования заголовка пакета. Обязан совпадать на обеих сторонах, иначе рукопожатие не завершается.",
+    "generateHeaderProtectionKey": "Сгенерировать ключ",
+    "contentPaddingAdditionLabel": "Дополнительный паддинг данных",
+    "contentPaddingAdditionDescription": "Дополнительная добивка внутри шифрованной части. Значение или диапазон, например 0-8",
+    "rekeyAfterTimeLabel": "Время до смены ключа",
+    "rekeyAfterTimeDescription": "Секунды до начала смены ключа. Значение или диапазон, например 110-130",
+    "rekeyTimeoutLabel": "Таймаут смены ключа",
+    "rekeyTimeoutDescription": "Секунды до повтора рукопожатия. Значение или диапазон",
+    "rejectAfterTimeLabel": "Время до отклонения сессии",
+    "rejectAfterTimeDescription": "Секунды до отклонения сессии. Значение или диапазон",
+    "keepaliveTimeoutLabel": "Таймаут keepalive",
+    "keepaliveTimeoutDescription": "Секунды до отправки keepalive. Значение или диапазон",
+    "maxHandshakeAttemptsLabel": "Максимум попыток рукопожатия",
+    "maxHandshakeAttemptsDescription": "Число попыток рукопожатия до отказа. Значение или диапазон"
   }
 }
