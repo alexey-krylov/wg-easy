@@ -75,6 +75,8 @@ export const InterfaceUpdateSchema = schemaForType<InterfaceUpdateType>()(
     rejectAfterTime: RangeSchema,
     keepaliveTimeout: RangeSchema,
     maxHandshakeAttempts: RangeSchema,
+    randomTrailers: EnabledSchema,
+    disableCookies: EnabledSchema,
     port: PortSchema,
     device: device,
     enabled: EnabledSchema,

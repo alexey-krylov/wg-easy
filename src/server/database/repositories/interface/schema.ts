@@ -41,6 +41,15 @@ export const wgInterface = sqliteTable('interfaces_table', {
   rejectAfterTime: text('reject_after_time'),
   keepaliveTimeout: text('keepalive_timeout'),
   maxHandshakeAttempts: text('max_handshake_attempts'),
+  // AmneziaWG 3.1: pads handshakes to a random size. Not a local choice — a
+  // peer without it drops the padded handshake on length alone.
+  randomTrailers: int('random_trailers', { mode: 'boolean' })
+    .notNull()
+    .default(false),
+  // AmneziaWG 3.1: never answer with a cookie reply. Server side only.
+  disableCookies: int('disable_cookies', { mode: 'boolean' })
+    .notNull()
+    .default(false),
   // does nothing yet
   enabled: int({ mode: 'boolean' }).notNull(),
   // Enable per-client firewall filtering via iptables

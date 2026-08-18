@@ -86,6 +86,10 @@ AllowedIPs = ${allowedIps.join(', ')}${extraLines.length ? `\n${extraLines.join(
         RejectAfterTime: wgInterface.rejectAfterTime,
         KeepaliveTimeout: wgInterface.keepaliveTimeout,
         MaxHandshakeAttempts: wgInterface.maxHandshakeAttempts,
+        // AmneziaWG 3.1. Written only when enabled: an older AmneziaWG build
+        // rejects an unknown key outright, so "off" is spelled as absence.
+        RandomTrailers: wgInterface.randomTrailers ? 'on' : null,
+        DisableCookies: wgInterface.disableCookies ? 'on' : null,
       } as const;
 
       awgLines = Object.entries(parameters)
@@ -164,6 +168,10 @@ PostDown = ${iptablesTemplate(hooks.postDown, wgInterface)}`;
         RejectAfterTime: wgInterface.rejectAfterTime,
         KeepaliveTimeout: wgInterface.keepaliveTimeout,
         MaxHandshakeAttempts: wgInterface.maxHandshakeAttempts,
+        // AmneziaWG 3.1: trailers have to match, because a peer that does not
+        // expect a padded handshake drops it on length. Cookie suppression is
+        // the server answering (or not) and means nothing in a client config.
+        RandomTrailers: wgInterface.randomTrailers ? 'on' : null,
       } as const;
 
       awgLines = Object.entries(parameters)

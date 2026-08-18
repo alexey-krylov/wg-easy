@@ -182,6 +182,24 @@
           :description="$t('awg.maxHandshakeAttemptsDescription')"
         />
       </FormGroup>
+      <FormGroup v-if="globalStore.information?.isAwg">
+        <FormHeading>{{ $t('awg.v31Parameters') }}</FormHeading>
+
+        <div class="col-span-full text-sm">{{ $t('awg.v31Note') }}</div>
+
+        <FormSwitchField
+          id="randomTrailers"
+          v-model="data.randomTrailers"
+          :label="$t('awg.randomTrailersLabel')"
+          :description="$t('awg.randomTrailersDescription')"
+        />
+        <FormSwitchField
+          id="disableCookies"
+          v-model="data.disableCookies"
+          :label="$t('awg.disableCookiesLabel')"
+          :description="$t('awg.disableCookiesDescription')"
+        />
+      </FormGroup>
       <FormGroup>
         <FormHeading>{{ $t('admin.interface.firewall') }}</FormHeading>
         <FormSwitchField
@@ -297,6 +315,12 @@ async function restartInterface() {
  * sufficient and saves a round trip to the server.
  */
 function generateHeaderProtectionKey() {
+  // `data` is only populated once the interface has been fetched; typecheck
+  // is right that the button can exist before it is.
+  if (!data.value) {
+    return;
+  }
+
   const key = new Uint8Array(32);
   crypto.getRandomValues(key);
   data.value.headerProtectionKey = btoa(String.fromCharCode(...key));

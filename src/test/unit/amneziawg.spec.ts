@@ -110,6 +110,8 @@ const baseInterface = {
   rejectAfterTime: null,
   keepaliveTimeout: null,
   maxHandshakeAttempts: null,
+  randomTrailers: false,
+  disableCookies: false,
   port: 51820,
   device: 'eth0',
   enabled: true,
@@ -159,6 +161,40 @@ describe('InterfaceUpdateSchema with header protection', () => {
       ...baseInterface,
       s3: null,
       s4: null,
+    });
+
+    expect(result.success).toBe(true);
+  });
+});
+
+describe('InterfaceUpdateSchema with the AmneziaWG 3.1 switches', () => {
+  test('accepts both switches turned on', () => {
+    const result = InterfaceUpdateSchema.safeParse({
+      ...baseInterface,
+      randomTrailers: true,
+      disableCookies: true,
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  test('rejects a non-boolean value', () => {
+    const result = InterfaceUpdateSchema.safeParse({
+      ...baseInterface,
+      randomTrailers: 'on',
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error?.issues.map((issue) => issue.path.join('.'))).toContain(
+      'randomTrailers'
+    );
+  });
+
+  test('works without header protection — 3.1 does not depend on 3.0', () => {
+    const result = InterfaceUpdateSchema.safeParse({
+      ...baseInterface,
+      headerProtectionKey: null,
+      randomTrailers: true,
     });
 
     expect(result.success).toBe(true);

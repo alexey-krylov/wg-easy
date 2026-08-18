@@ -64,6 +64,13 @@
       "when": 1786450240820,
       "tag": "0008_amneziawg_3",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1787052452923,
+      "tag": "0009_amneziawg_31",
+      "breakpoints": true
     }
   ]
 }

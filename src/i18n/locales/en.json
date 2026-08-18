@@ -325,6 +325,12 @@
     "keepaliveTimeoutLabel": "Keepalive timeout",
     "keepaliveTimeoutDescription": "Seconds before a keepalive is sent. Single value or range",
     "maxHandshakeAttemptsLabel": "Max handshake attempts",
-    "maxHandshakeAttemptsDescription": "Number of handshake attempts before giving up. Single value or range"
+    "maxHandshakeAttemptsDescription": "Number of handshake attempts before giving up. Single value or range",
+    "v31Parameters": "AmneziaWG 3.1 parameters",
+    "v31Note": "These two are independent of the 3.0 block above and need AmneziaWG 3.1 (released 12 Aug 2026) on this server. Random trailers additionally need it on every client: an older client drops a padded handshake on length alone and the tunnel never comes up.",
+    "randomTrailersLabel": "Random trailers",
+    "randomTrailersDescription": "Pads every handshake to a random size, so its length stops being a constant. Must be supported and enabled on every client too — enable it here only once all clients run AmneziaWG 3.1.",
+    "disableCookiesLabel": "Disable cookie replies",
+    "disableCookiesDescription": "Never answer with a cookie reply. That reply is the one thing a stranger can provoke under load, so suppressing it hides the server from active probing — at the cost of the standard anti-amplification defence. Server side only, clients need no change."
   }
 }
