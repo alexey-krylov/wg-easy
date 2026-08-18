@@ -38,7 +38,12 @@ RUN npm install --no-save --omit=dev libsql
 FROM docker.io/library/node:krypton-alpine@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53
 WORKDIR /app
 
-HEALTHCHECK --interval=1m --timeout=5s --retries=3 CMD /usr/bin/timeout 5s /bin/sh -c "/usr/bin/wg show | /bin/grep -q interface || exit 1"
+# Ask whichever tool actually runs the tunnel. `wg show` cannot see an
+# AmneziaWG interface — it lives behind amneziawg-go's own UAPI socket — so on
+# an AWG deployment the stock check reports unhealthy while the tunnel is fine,
+# and every deployment has to override it from the outside. Empty output from
+# the first tool means "not this one", not "no interface".
+HEALTHCHECK --interval=1m --timeout=5s --retries=3 CMD /usr/bin/timeout 5s /bin/sh -c 'out=$(/usr/bin/awg show 2>/dev/null); [ -z "$out" ] && out=$(/usr/bin/wg show 2>/dev/null); echo "$out" | /bin/grep -q interface'
 
 # Copy build
 COPY --from=build /app/.output /app
