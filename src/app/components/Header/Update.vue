@@ -2,6 +2,7 @@
   <div
     v-if="
       globalStore.information?.updateAvailable &&
+      globalStore.information?.latestRelease &&
       authStore.userData &&
       hasPermissions(authStore.userData, 'admin', 'any')
     "
