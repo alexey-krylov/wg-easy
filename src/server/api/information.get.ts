@@ -12,8 +12,25 @@ import {
 import { cachedFetchLatestRelease } from '#server/utils/release';
 
 export default defineEventHandler(async () => {
-  const latestRelease = await cachedFetchLatestRelease();
-  const updateAvailable = gt(latestRelease.version, RELEASE);
+  /*
+   * Whether upstream has a newer release is a nice-to-have, and this endpoint
+   * is where the panel gets everything else: its own version, the build it is
+   * running, the AWG mode, the firewall state. A host that cannot reach
+   * api.github.com — no route, a blocked domain, a slow link — used to take
+   * the whole endpoint down with a 500, and with it the footer that says which
+   * build this is. The panel now simply reports no known upstream release.
+   */
+  let latestRelease: Awaited<
+    ReturnType<typeof cachedFetchLatestRelease>
+  > | null = null;
+  let updateAvailable = false;
+
+  try {
+    latestRelease = await cachedFetchLatestRelease();
+    updateAvailable = gt(latestRelease.version, RELEASE);
+  } catch {
+    // Left null on purpose: the update banner reads updateAvailable first.
+  }
   const insecure = WG_ENV.INSECURE;
   const isAwg = WG_ENV.WG_EXECUTABLE === 'awg';
   const wgInterface = await Database.interfaces.get();
