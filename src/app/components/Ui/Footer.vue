@@ -29,9 +29,36 @@
         >{{ $t('layout.donate') }}</a
       >
     </p>
+    <p
+      v-if="buildLine"
+      class="-mt-8 mb-10 text-center text-xs text-gray-300 dark:text-neutral-600"
+    >
+      {{ buildLine }}
+    </p>
   </footer>
 </template>
 
 <script lang="ts" setup>
 const globalStore = useGlobalStore();
+
+/**
+ * Build provenance, when the image carries it: date, source ref and the
+ * wg/awg tools inside. The release number above says which upstream version
+ * this is; this line says which build of it is actually running.
+ */
+const buildLine = computed(() => {
+  const info = globalStore.information;
+
+  if (!info) {
+    return null;
+  }
+
+  const parts = [
+    info.buildDate ? `build ${info.buildDate}` : null,
+    info.buildRef,
+    info.toolsVersion,
+  ].filter(Boolean);
+
+  return parts.length ? parts.join(' · ') : null;
+});
 </script>
