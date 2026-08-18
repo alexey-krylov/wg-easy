@@ -77,6 +77,14 @@ RUN ln -s /etc/wireguard /etc/amnezia/amneziawg
 RUN update-alternatives --install /usr/sbin/iptables iptables /usr/sbin/iptables-legacy 10 --slave /usr/sbin/iptables-restore iptables-restore /usr/sbin/iptables-legacy-restore --slave /usr/sbin/iptables-save iptables-save /usr/sbin/iptables-legacy-save
 RUN update-alternatives --install /usr/sbin/ip6tables ip6tables /usr/sbin/ip6tables-legacy 10 --slave /usr/sbin/ip6tables-restore ip6tables-restore /usr/sbin/ip6tables-legacy-restore --slave /usr/sbin/ip6tables-save ip6tables-save /usr/sbin/ip6tables-legacy-save
 
+# Build provenance: passed in by the build command, shown in the panel footer.
+# Empty by default — a build that does not set them shows nothing rather than
+# claiming a date it does not know.
+ARG BUILD_DATE=""
+ARG BUILD_REF=""
+ENV BUILD_DATE=$BUILD_DATE
+ENV BUILD_REF=$BUILD_REF
+
 # Set Environment
 ENV DEBUG=Server,WireGuard,Database,CMD,Firewall
 ENV PORT=51821
