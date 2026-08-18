@@ -10,6 +10,41 @@ import {
 
 export const RELEASE = 'v' + packageJson.version;
 
+/**
+ * When and from what this image was built.
+ *
+ * The upstream version alone does not answer the question people actually have
+ * in front of a running panel — "is this the build I deployed, and does it
+ * carry my patches". Both are baked in at image build time; a build that did
+ * not set them simply reports nothing rather than guessing.
+ */
+export const BUILD_DATE = process.env.BUILD_DATE || null;
+export const BUILD_REF = process.env.BUILD_REF || null;
+
+/**
+ * Version string of the wg/awg tools actually installed in this image, e.g.
+ * "amneziawg-tools v1.0.20260813". Read once — it cannot change under a
+ * running container.
+ */
+let toolsVersion: string | null | undefined;
+
+export const getToolsVersion = async (executable: string) => {
+  if (toolsVersion !== undefined) {
+    return toolsVersion;
+  }
+
+  try {
+    const out = await exec(`${executable} --version`);
+    toolsVersion = out.trim().split('\n')[0] || null;
+  } catch {
+    // A broken or foreign-architecture binary is exactly the case worth
+    // surfacing in the panel, so failure is a value, not an exception.
+    toolsVersion = null;
+  }
+
+  return toolsVersion;
+};
+
 export const SERVER_DEBUG = createDebug('Server');
 
 export const OLD_ENV = {
