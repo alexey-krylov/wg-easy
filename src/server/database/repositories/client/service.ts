@@ -227,6 +227,15 @@ export class ClientService {
           i3: clientConfig.defaultI3,
           i4: clientConfig.defaultI4,
           i5: clientConfig.defaultI5,
+          // AmneziaWG 3.0 per-client parameters have no defaults of their own:
+          // start from the interface values, so a new client gets the same
+          // randomised timings as the server instead of none at all.
+          contentPaddingAddition: clientInterface.contentPaddingAddition,
+          rekeyAfterTime: clientInterface.rekeyAfterTime,
+          rekeyTimeout: clientInterface.rekeyTimeout,
+          rejectAfterTime: clientInterface.rejectAfterTime,
+          keepaliveTimeout: clientInterface.keepaliveTimeout,
+          maxHandshakeAttempts: clientInterface.maxHandshakeAttempts,
           persistentKeepalive: clientConfig.defaultPersistentKeepalive,
           serverAllowedIps: [],
           enabled: true,
